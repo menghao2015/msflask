@@ -8,9 +8,14 @@ from flask.ext.wtf import Form
 from wtforms import StringField, SubmitField
 from wtforms.validators import Required
 
+from flask.ext.sqlalchemy import SQLAlchemy
+
 apl = Flask(__name__)
 apl.config['SECRET_KEY'] = 'hard to guess string'
+apl.config['SQLACHEMY_DATABASE_URI'] = 'mysql://root:@127.0.0.1/data_dev'
+apl.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 
+db = SQLAlchemy(apl)
 apl_manager = Manager(apl)
 bootstrap = Bootstrap(apl)
 moment = Moment(apl)
@@ -18,6 +23,31 @@ moment = Moment(apl)
 class NameForm(Form):
 	name = StringField('What is your name?', validators=[Required()])
 	submit = SubmitField('Summit')
+
+class Role(db.Model):
+	__tablename__ = 'roles'
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(64), unique=True)
+	users = db.relationship('User', backref='role')
+
+	def __repr__(self):
+		return '<Role %r>' % self.name
+
+class User(db.Model):
+	__tablename__ = 'users'
+	id = db.Column(db.Integer, primary_key=True)
+	username = db.Column(db.String(64), unique=True, index=True)
+	role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+
+	def __repr__(self):
+		return '<User %r>' % self.username
+
+
+
+
+
+
+
 
 
 @apl.route('/',methods=['GET','POST'])
