@@ -10,15 +10,26 @@ from wtforms.validators import Required
 
 from flask.ext.sqlalchemy import SQLAlchemy
 
+from flask.ext.script import Shell
+
+from flask.ext.migrate import Migrate, MigrateCommand
+
 apl = Flask(__name__)
 apl.config['SECRET_KEY'] = 'hard to guess string'
-apl.config['SQLACHEMY_DATABASE_URI'] = 'mysql://root:@127.0.0.1/data_dev'
+apl.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@127.0.0.1/data_dev'
 apl.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 
 db = SQLAlchemy(apl)
 apl_manager = Manager(apl)
 bootstrap = Bootstrap(apl)
 moment = Moment(apl)
+
+migrate = Migrate(apl,db)
+apl_manager.add_command('db',MigrateCommand)
+def make_shell_context():
+	return dict(apl=apl, db=db, User=User, Role=Role)
+apl_manager.add_command("shell", Shell(make_context=make_shell_context))
+
 
 class NameForm(Form):
 	name = StringField('What is your name?', validators=[Required()])
@@ -29,6 +40,7 @@ class Role(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(64), unique=True)
 	users = db.relationship('User', backref='role')
+	users = db.relationship('User', backref='role', lazy='dynamic')
 
 	def __repr__(self):
 		return '<Role %r>' % self.name
@@ -44,23 +56,25 @@ class User(db.Model):
 
 
 
-
-
-
-
-
-
 @apl.route('/',methods=['GET','POST'])
 def index():
-	name = None
 	form = NameForm()
 	if form.validate_on_submit():
-		old_name = session.get('name')
-		if old_name is not None and old_name != form.name.data:
-			flash('Looks like you have changed your name!')
+		user = User.query.filter_by(username = form.name.data).first()
+		if user is None:
+			user = User(username = form.name.data)
+			db.session.add(user)
+			session['known'] = False
+		else:
+			session['known'] = True
 		session['name'] = form.name.data
+		old_name = session.get('name')
+		if old_name is not None and old_name != user:
+			flash('Looks like you have changed your name!')
+		form.name.data = ''
 		return redirect(url_for('index'))
-	return render_template('index.html',form=form, name=session.get('name'), current_time=datetime.utcnow())
+	return render_template('index.html',form=form, name=session.get('name'),\
+			known = session.get('known',False), current_time=datetime.utcnow())
 
 @apl.route('/user/<name>')
 def user(name):
@@ -78,4 +92,6 @@ def internal_server_error(e):
 
 
 if __name__ == '__main__':
+	db.create_all()
+	db.session.commit()
 	apl_manager.run()
