@@ -5,14 +5,15 @@
 
 {% block page_content %}
 <div class="container">
-	<h1>Hello, {% if name %} {{ name }} {% else %} Stranger {% endif %}</h1>
-	{% if known %}
-	<p> Happy to see you again!</p>
+	<h1>Hello,
+	{% if current_user.is_authenticated %}
+	
+	{{ current_user.username }}
+	
 	{% else %}
-	<p> please to meet you!</p>
-	{% endif %}
+	
+	Stranger {% endif %} !</h1>
 
-	{{ wtf.quick_form(form) }}
 
 <div align="right"  valign="bottom">
 	<p> The local time is {{ moment(current_time).format('LLLL') }} </p>
