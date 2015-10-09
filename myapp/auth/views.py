@@ -4,7 +4,9 @@ from flask.ext.login import logout_user,login_required
 
 from . import auth
 from .forms import LoginForm
+from .forms import RegistrationForm
 from ..models import User
+from .. import db
 
 @auth.route('/login', methods=['GET','POST'])
 def login():
@@ -24,7 +26,19 @@ def logout():
 	flash('you have been logged out.')
 	return redirect(url_for('main.index'))	
 
+@auth.route('/register', methods=['GET', 'POST'])
+def register():
+	form = RegistrationForm()
+	if form.validate_on_submit():
+		user = User(email = form.email.data,
+					username = form.username.data,
+					password = form.password.data)
+		db.session.add(user)
+		flash('register complite,now you can login')
+		return redirect(url_for('auth.login'))
+	return render_template('auth/register.html', form = form )
 
+	
 
 
 
