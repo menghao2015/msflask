@@ -18,7 +18,7 @@ class RegistrationForm(Form):
 												Regexp('^[A-Za-z][A-Za-z0-9._]*$',0,
 												'Username must have only letters,numbers, dots or underscores')])
 	password = PasswordField('password',validators=[Required(), EqualTo('password2', 'password do not match')])
-	password2 = PasswordField('conform password', validators = [Required()])
+	password2 = PasswordField('confirm password', validators = [Required()])
 	submit = SubmitField('register')
 
 	def validate_email(self,field):
