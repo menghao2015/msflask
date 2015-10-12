@@ -4,6 +4,15 @@ from wtforms.validators import Required, Length, Email, Regexp, EqualTo
 from wtforms import ValidationError
 from ..models import User
 
+
+class ChangePasswordForm(Form):
+	old_password = PasswordField('old_password', validators = [Required()])
+	new_password1 = PasswordField('NewPassword', validators = [Required(),
+					 EqualTo('new_password2', 'PW do not match')])
+
+	new_password2 = PasswordField('confirm password', validators = [Required()])
+	submit = SubmitField('submit')
+
 class LoginForm(Form):
 	email = StringField('email', validators = [Required(),
 					 Length(1,64),Email()])
@@ -15,8 +24,8 @@ class LoginForm(Form):
 class RegistrationForm(Form):
 	email = StringField('email', validators=[Required(),Length(1,64), Email()])
 	username = StringField('username', validators=[Required(), Length(1,64),
-												Regexp('^[A-Za-z][A-Za-z0-9._]*$',0,
-												'Username must have only letters,numbers, dots or underscores')])
+						Regexp('^[A-Za-z][A-Za-z0-9._]*$',0,
+						'Username must have only letters,numbers, dots or underscores')])
 	password = PasswordField('password',validators=[Required(), EqualTo('password2', 'password do not match')])
 	password2 = PasswordField('confirm password', validators = [Required()])
 	submit = SubmitField('register')
