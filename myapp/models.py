@@ -27,7 +27,7 @@ class User(UserMixin,db.Model):
 		return s.dumps({ 'confirm' : self.id })
 
 	def confirm(self,token):
-		s = Serializer(current_app.config['SECRERT_KEY'])
+		s = Serializer(current_app.config['SECRET_KEY'])
 		try:
 			data = s.loads(token)
 		except:
