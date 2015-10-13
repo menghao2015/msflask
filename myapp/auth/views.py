@@ -6,6 +6,9 @@ from . import auth
 from .forms import LoginForm
 from .forms import RegistrationForm
 from .forms import ChangePasswordForm
+from .forms import CheckEmailForm
+from .forms import ResetPasswordForm
+
 from ..models import User
 from .. import db
 from ..email  import send_email
@@ -17,6 +20,30 @@ def before_request():
 			and request.endpoint[:5] != 'auth.' \
 			and request.endpoint != 'static':
 		return redirect(url_for('auth.unconfirmed'))
+
+@auth.route('/reset_password',methods = ['GET', 'POST'])
+def check_email():
+	form = CheckEmailForm()
+	if form.validate_on_submit():
+		user = User.query.filter_by(email = form.email.data).first()
+		token = user.generate_confirmation_token()
+		send_email(form.email.data,'Reset Password',
+				'auth/email/reset_password', user = user, token = token)
+		flash('A confirmation  email send to you inbox, follow url to reset password')
+		return redirect(url_for('main.index'))
+	return render_template('auth/check_email.html', form = form) 
+
+@auth.route('/reset_password/<token>', methods = ['GET', 'POST'])
+def reset_password(token):
+	form = ResetPasswordForm()
+	if form.validate_on_submit():
+		current_user.password = form.new_pd1.data
+		db.session.add(current_user)
+		flash('reset password complete')
+		return redirect(url_for('auth.login'))
+	return render_template('auth/reset_password.html', form = form)
+
+
 
 @auth.route('/unconfirmed')
 def unconfirmed():

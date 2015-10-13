@@ -5,6 +5,19 @@ from wtforms import ValidationError
 from ..models import User
 
 
+
+class CheckEmailForm(Form):
+	email = StringField('your email', validators = [Required(), Length(1,64), Email()])
+	submit = SubmitField('submit')
+
+class ResetPasswordForm(Form):
+	new_pd1 = PasswordField('new password', validators = [Required(), 
+								EqualTo('new_pd2', 'password do not match')])
+
+	new_pd2 = PasswordField('confirm password', validators = [Required()])
+	submit = SubmitField('submit')
+
+
 class ChangePasswordForm(Form):
 	old_password = PasswordField('old_password', validators = [Required()])
 	new_password1 = PasswordField('NewPassword', validators = [Required(),
