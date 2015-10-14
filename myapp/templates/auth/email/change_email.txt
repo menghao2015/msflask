@@ -1,0 +1,6 @@
+Dear {{ user.username }} 
+
+Click The URL to Reset Email:	
+
+{{ url_for('auth.change_email', token = token, _external=True) }}
+The Flasky Team

@@ -8,7 +8,7 @@ from .forms import RegistrationForm
 from .forms import ChangePasswordForm
 from .forms import CheckEmailForm
 from .forms import ResetPasswordForm
-
+from .forms import ChangeEmailForm
 from ..models import User
 from .. import db
 from ..email  import send_email
@@ -128,10 +128,27 @@ def change_password():
 			return redirect(url_for('auth.login'))
 	return render_template('auth/change_password.html', form = form)
 
+@auth.route('/change_email', methods = ['GET', 'POST'])
+@login_required
+def change_email_request():
+	form = ChangeEmailForm()
+	if form.validate_on_submit():
+		current_user.temp_email = form.email.data
+		token = current_user.generate_reset_email_token()
+		send_email(form.email.data, 'Change email',
+				'auth/email/change_email', user = current_user, token = token)
+		flash('A reset email confirmation email send to you,please check')
+		return redirect(url_for('main.index'))
+	return render_template('auth/change_email.html', form = form)
 
-
-
-
+@auth.route('/chage_email/<token>')
+def change_email(token):
+	if current_user.reset_email(token):
+		flash('Change email complete')
+		return redirect(url_for('auth.login'))
+	else:
+		flash('invalid url')
+	return render_template('main/index.html') 
 
 
 

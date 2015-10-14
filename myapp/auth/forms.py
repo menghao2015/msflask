@@ -6,6 +6,10 @@ from ..models import User
 
 
 
+class ChangeEmailForm(Form):
+	email = StringField('email', validators= [Required(), Length(1,64), Email()])
+	submit = SubmitField('submit')
+
 class CheckEmailForm(Form):
 	email = StringField('your email', validators = [Required(), Length(1,64), Email()])
 	submit = SubmitField('submit')

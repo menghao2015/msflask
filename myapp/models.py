@@ -21,6 +21,7 @@ class User(UserMixin,db.Model):
 	role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 	password_hash = db.Column(db.String(128))
 	confirmed = db.Column(db.Boolean, default = False)
+	temp_email = db.Column(db.String(64),unique=True)
 
 	@property
 	def password(self):
@@ -69,6 +70,23 @@ class User(UserMixin,db.Model):
 		self.password = new_password
 		db.session.add(self)
 		return True
+	
+	def generate_reset_email_token(self, expiration = 3600):
+		s= Serializer( current_app.config['SECRET_KEY'], expiration)
+		return s.dumps( {'reset_email': self.id} )
+
+	def reset_email(self,token):
+		s = Serializer( current_app.config['SECRET_KEY'])
+		try:
+			data = s.loads(token)
+		except:
+			return False
+		if data.get('reset_email') != self.id:
+			return False
+		self.email = self.temp_email
+		db.session.add(self)
+		return True
+
 
 @login_manager.user_loader
 def load_user(user_id):
