@@ -26,21 +26,29 @@ def check_email():
 	form = CheckEmailForm()
 	if form.validate_on_submit():
 		user = User.query.filter_by(email = form.email.data).first()
-		token = user.generate_confirmation_token()
-		send_email(form.email.data,'Reset Password',
-				'auth/email/reset_password', user = user, token = token)
-		flash('A confirmation  email send to you inbox, follow url to reset password')
-		return redirect(url_for('main.index'))
+		if user:
+			token = user.generate_reset_token()
+			send_email(form.email.data,'Reset Password',
+					'auth/email/reset_password', user = user, token = token)
+			flash('A confirmation  email send to you inbox, follow url to reset password')
+			return redirect(url_for('main.index'))
+		else:
+			flash('invalid email')
 	return render_template('auth/check_email.html', form = form) 
 
 @auth.route('/reset_password/<token>', methods = ['GET', 'POST'])
-def reset_password(token):
+def password_reset(token):
+	if not current_user.is_anonymous:
+		return redirect(url_for('main.index'))
 	form = ResetPasswordForm()
 	if form.validate_on_submit():
-		current_user.password = form.new_pd1.data
-		db.session.add(current_user)
-		flash('reset password complete')
-		return redirect(url_for('auth.login'))
+		user = User.query.filter_by(email = form.email.data).first()
+		if user is None:
+			return redirect(url_for('main.index'))
+		if user.reset_password(token, form.new_password1.data):
+			db.session.add(user)
+			flash('reset password complete')
+			return redirect(url_for('auth.login'))
 	return render_template('auth/reset_password.html', form = form)
 
 

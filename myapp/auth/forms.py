@@ -11,11 +11,16 @@ class CheckEmailForm(Form):
 	submit = SubmitField('submit')
 
 class ResetPasswordForm(Form):
-	new_pd1 = PasswordField('new password', validators = [Required(), 
-								EqualTo('new_pd2', 'password do not match')])
+	email = StringField('email', validators=[Required(), Length(1,64), Email()])
+	new_password1 = PasswordField('new password', validators = [Required(), 
+								EqualTo('new_password2', 'password do not match')])
 
-	new_pd2 = PasswordField('confirm password', validators = [Required()])
+	new_password2 = PasswordField('confirm password', validators = [Required()])
 	submit = SubmitField('submit')
+	
+	def validate_email(self,field):
+		if User.query.filter_by(email = field.data).first() is None:
+			raise  ValidationError('Unknown email')
 
 
 class ChangePasswordForm(Form):
