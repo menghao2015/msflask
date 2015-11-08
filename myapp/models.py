@@ -4,6 +4,10 @@ from . import db,  login_manager
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app
 
+class Permission:
+	pass
+
+
 class Role(db.Model):
 	__tablename__ = 'roles'
 	id = db.Column(db.Integer, primary_key = True)
