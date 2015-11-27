@@ -57,7 +57,7 @@ class User(UserMixin,db.Model):
 	def __init__(self,**kwargs):
 		super(User,self).__init__(**kwargs)
 		if self.role is None:
-			if self.email = currnet_app.config['FLASKY_ADMIN']:
+			if self.email == currnet_app.config['FLASKY_ADMIN']:
 				self.role = Role.query.filter_by(permission=0xff).first()
 			if self.role is None:
 				self.role = Role.query.filter_by(default = True).first()

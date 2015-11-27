@@ -20,15 +20,15 @@ class DevelopmentConfig(Config):
 	MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
 	MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
 	SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-				'mysql://root:@127.0.0.1/data_dev'
+				'mysql://root:redhat@127.0.0.1/data_dev'
 
 class TestingConfig(Config):
 	TESTING = True
 	SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
-				'mysql://root:@127.0.0.1/data_test'
+				'mysql://root:redhat@127.0.0.1/data_test'
 class ProductionConfig(Config):
 	SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-				'mysql://root:@127.0.0.1/data'
+				'mysql://root:redhat@127.0.0.1/data'
 config = {
 	'development': DevelopmentConfig,
 	'testing': TestingConfig,
