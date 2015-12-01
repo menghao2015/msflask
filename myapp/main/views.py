@@ -25,3 +25,13 @@ def index():
 		return redirect(url_for('.index'))
 	return render_template('index.html',form=form, name=session.get('name'),\
 			known = session.get('known',False), current_time=datetime.utcnow())
+
+
+@main.route('/user/<username>')
+def users(username):
+	user = User.query.filte_by(user=username).first()
+	if user is None:
+		abort(404)
+	return render_template('user.html', user=user)
+
+

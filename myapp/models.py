@@ -3,6 +3,7 @@ from flask.ext.login import UserMixin
 from . import db,  login_manager
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app
+from datetime import datetime
 
 class Permission:
 	FOLLOW = 0x01
@@ -52,6 +53,11 @@ class User(UserMixin,db.Model):
 	password_hash = db.Column(db.String(128))
 	confirmed = db.Column(db.Boolean, default = False)
 	temp_email = db.Column(db.String(64),unique=True)
+	name = db.Column(db.String(64))
+	locate = db.Column(db.String(64))
+	about_me = db.Column(db.Text())
+	member_since = db.Column(db.DateTime(), default=datetime.utcnow)
+	last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
 
 	
 	def __init__(self,**kwargs):
@@ -61,7 +67,11 @@ class User(UserMixin,db.Model):
 				self.role = Role.query.filter_by(permission=0xff).first()
 			if self.role is None:
 				self.role = Role.query.filter_by(default = True).first()
-
+	
+	def ping(self):
+		self.last_seen = datetime.utcnow()
+		db.session.add(self)
+	
 
 	
 	@property
