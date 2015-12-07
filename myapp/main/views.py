@@ -52,15 +52,6 @@ def edit_profile():
 	form.name.data = current_user.name
 	form.locate.data = current_user.locate
 	form.about_me.data = current_user.about_me
-	return render_template('edit_profile.html', form = form)
-		current_user.location = form.location.data
-		current_user.about_me = form.about_me.data
-		db.session.add(current_user)
-		flash('Your profile has been updated.')
-		return redirect(url_for('.user', username=current_user.username))
-	form.name.data = current_user.name
-	form.location.data = current_user.location
-	form.about_me.data = current_user.about_me
 	return render_template('edit_profile.html', form=form)
 	
 @main.route('/edit-profile/<int:id>', methods=['GET', 'POST'])

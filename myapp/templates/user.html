@@ -4,14 +4,13 @@
 
 {% block page_content %}
 <div class="page-header">
-    <img class="img-rounded profile-thumbnail" src="{{ user.gravatar(size=100) }}">
     <div class="profile-header">
         <h1>{{ user.username }}</h1>
-        {% if user.name or user.location %}
+        {% if user.name or user.locate %}
         <p>
             {% if user.name %}{{ user.name }}<br>{% endif %}
-            {% if user.location %}
-                From: <a href="http://maps.google.com/?q={{ user.location }}">{{ user.location }}</a><br>
+            {% if user.locate %}
+                From: <a href="http://maps.baidu.com/?q={{ user.locate }}">{{ user.locate }}</a><br>
             {% endif %}
         </p>
         {% endif %}
