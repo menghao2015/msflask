@@ -1,12 +1,14 @@
-from datetime import datetime
 from flask import render_template, session, redirect, url_for, current_app, flash
-from flask.ext.login import current_user, login_required
+from flask.ext.login import login_required, current_user
+from datetime import datetime
 from . import main
 from .forms import NameForm, EditProfileForm, EditProfileAdminForm
 from .. import db
 from ..decorators import admin_required
 from ..models import User,Role
 from ..email  import send_email
+from ..decorators import admin_required
+
 
 @main.route('/',methods=['GET','POST'])
 def index():
@@ -51,7 +53,16 @@ def edit_profile():
 	form.locate.data = current_user.locate
 	form.about_me.data = current_user.about_me
 	return render_template('edit_profile.html', form = form)
-
+		current_user.location = form.location.data
+		current_user.about_me = form.about_me.data
+		db.session.add(current_user)
+		flash('Your profile has been updated.')
+		return redirect(url_for('.user', username=current_user.username))
+	form.name.data = current_user.name
+	form.location.data = current_user.location
+	form.about_me.data = current_user.about_me
+	return render_template('edit_profile.html', form=form)
+	
 @main.route('/edit-profile/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -78,19 +89,6 @@ def edit_profile_admin(id):
 	form.locate.data = user.locate
 	form.about_me.data = user.about_me
 	return render_template('edit_profile.html', form=form, user=user)
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
