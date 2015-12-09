@@ -100,7 +100,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'menghao','menghao_92@163.com',2,'pbkdf2:sha1:1000$5MHZ5FK4$07dcddf9a249737a90987360561aaef5ff55153c',1,NULL,NULL,'2015-12-02 06:46:15','2015-12-02 06:42:05',NULL,NULL),(2,'menghao2','690079587@qq.com',3,'pbkdf2:sha1:1000$BMF37xGr$b04edd42846f8ad4b83b653847f554aaab850bf4',1,NULL,'good boy','2015-12-03 06:56:32','2015-12-02 06:45:37','中文','??'),(3,'admin','lucky__menghao@163.com',3,'pbkdf2:sha1:1000$XFEc76Kr$e1388be51850f84706982572b70ce9d56abc8a43',1,NULL,NULL,'2015-12-03 06:18:32','2015-12-02 06:48:26',NULL,NULL);
+INSERT INTO `users` VALUES (1,'admin','menghao_92@163.com',2,'pbkdf2:sha1:1000$5MHZ5FK4$07dcddf9a249737a90987360561aaef5ff55153c',1,NULL,'I\'m admin','2015-12-08 05:56:03','2015-12-02 06:42:05','管理员','中国'),(2,'user','690079587@qq.com',3,'pbkdf2:sha1:1000$BMF37xGr$b04edd42846f8ad4b83b653847f554aaab850bf4',1,NULL,'good boy','2015-12-07 08:39:23','2015-12-02 06:45:37','小梦','鄂州'),(3,'moderator','lucky__menghao@163.com',1,'pbkdf2:sha1:1000$XFEc76Kr$e1388be51850f84706982572b70ce9d56abc8a43',1,NULL,'decorators','2015-12-07 08:14:07','2015-12-02 06:48:26','协管','广州');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -113,4 +113,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-12-03 15:03:13
+-- Dump completed on 2015-12-08 16:58:01
