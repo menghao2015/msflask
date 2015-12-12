@@ -7,6 +7,16 @@ from datetime import datetime
 import hashlib
 
 
+
+class Post(db.Model):
+	__tablename__ = 'posts'
+	id = db.Column(db.Integer, primary_key=True)
+	body = db.Column(db.Text)
+	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+	author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+
+
 class Permission:
     FOLLOW = 0x01
     COMMENT = 0x02
@@ -34,8 +44,6 @@ class Role(db.Model):
 						| Permission.MODERATE_COMMENTS, False),
 			'Administrator':(0xff, False)
 			}
-
-
 		for r in roles:
 			role= Role.query.filter_by(name=r).first()
 			if role is None:
@@ -44,8 +52,6 @@ class Role(db.Model):
 			role.default=roles[r][1]
 			db.session.add(role)
 		db.session.commit()
-
-
 
 
 class User(UserMixin,db.Model):
@@ -63,6 +69,7 @@ class User(UserMixin,db.Model):
 	member_since = db.Column(db.DateTime(), default=datetime.utcnow)
 	last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
 	avatar_hash = db.Column(db.String(32))
+	posts = db.relationship('Post', backref='author', lazy='dynamic')
 
 
 	def gravatar(self,size=100, default='identicon', rating='g'):

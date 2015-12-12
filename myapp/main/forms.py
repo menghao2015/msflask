@@ -1,9 +1,11 @@
 from flask.ext.wtf import Form
 from wtforms import StringField, SubmitField, TextAreaField, BooleanField, SelectField, ValidationError
 from wtforms.validators import Required, Length,Regexp, Email
-from ..models import Role,User
+from ..models import Role,User,Post
 
-
+class PostForm(Form):
+	body = TextAreaField("what's you mind on", validators=[Required()])
+	submit = SubmitField('submit')
 
 class NameForm(Form):
 	name = StringField('what is you name', validators=[Required()])
