@@ -14,6 +14,15 @@ class Permission:
     MODERATE_COMMENTS = 0x08
     ADMINISTER = 0x80
 
+
+class Post(db.Model):
+	__tablename__ = 'posts'
+	id = db.Column(db.Integer, primary_key=True)
+	body = db.Column(db.Text)
+	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+	author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+
 class Role(db.Model):
 	__tablename__ = 'roles'
 	id = db.Column(db.Integer, primary_key = True,index=True)
@@ -21,7 +30,6 @@ class Role(db.Model):
 	default = db.Column(db.Boolean, default=False, index=True)
 	users = db.relationship('User', backref='role', lazy='dynamic')
 	permission = db.Column(db.Integer)
-	default = db.Column(db.Boolean, default=False, index=True)
 
 	
 	def __repr__(self):
@@ -63,6 +71,8 @@ class User(UserMixin,db.Model):
 	member_since = db.Column(db.DateTime(), default=datetime.utcnow)
 	last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
 	avatar_hash = db.Column(db.String(32))
+	posts = db.relationship('Post', backref='author', lazy='dynamic')
+
 
 
 	def gravatar(self,size=100, default='identicon', rating='g'):
