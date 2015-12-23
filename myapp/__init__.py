@@ -5,12 +5,15 @@ from flask.ext.moment import Moment
 from flask.ext.sqlalchemy import SQLAlchemy
 from config import config
 from flask.ext.login import LoginManager
+from flask.ext.pagedown import PageDown
 
 
 bootstrap = Bootstrap()
 mail = Mail()
 moment = Moment()
 db = SQLAlchemy()
+pagedown = PageDown()
+
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
@@ -26,6 +29,7 @@ def create_app(config_name):
 	moment.init_app(apl)
 	db.init_app(apl)
 	login_manager.init_app(apl)
+	pagedown.init_app(apl)
 
 	from .main import main as main_blueprint
 	apl.register_blueprint(main_blueprint)

@@ -20,6 +20,7 @@
 	{{ macros.pagination_widget(pagination, '.index') }}
 </div>
 
+
 <div align="right"  valign="bottom">
 	<p> The local time is {{ moment(current_time).format('LLLL') }} </p>
 	<p> That was {{ moment(current_time).fromNow(refresh=True) }} </p>
@@ -29,3 +30,7 @@
 {% endblock %}
 
 
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{% endblock %}

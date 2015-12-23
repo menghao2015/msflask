@@ -2,10 +2,10 @@ from flask.ext.wtf import Form
 from wtforms import StringField, SubmitField, TextAreaField, BooleanField, SelectField, ValidationError
 from wtforms.validators import Required, Length,Regexp, Email
 from ..models import Role,User
-
+from flask.ext.pagedown.fields import PageDownField
 
 class PostForm(Form):
-	body = TextAreaField("what's your mian ?", validators=[Required()])
+	body = PageDownField("what's your mian ?", validators=[Required()])
 	submit = SubmitField('submit')
 
 
