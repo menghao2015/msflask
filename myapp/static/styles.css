@@ -2,8 +2,8 @@
     position: absolute;
 }
 .profile-header {
-    min-height: 260px;
-    margin-left: 280px;
+    min-height: 140px;
+    margin-left: 160px;
 }
 ul.posts {
     list-style-type: none;

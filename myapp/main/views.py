@@ -5,7 +5,7 @@ from . import main
 from .forms import NameForm, EditProfileForm, EditProfileAdminForm, PostForm
 from .. import db
 from ..decorators import admin_required
-from ..models import User,Role,Permission,  Post
+from ..models import User,Role,Permission, Post
 from ..email  import send_email
 from ..decorators import admin_required
 
@@ -53,9 +53,6 @@ def edit(id):
 	return render_template('edit_post.html', form=form)
 
 
-
-
-
 @main.route('/edit-profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
@@ -101,6 +98,9 @@ def edit_profile_admin(id):
 	return render_template('edit_profile.html', form=form, user=user)
 
 
-
+@main.route('/post/<int:id>')
+def post(id):
+	post = Post.query.get_or_404(id)
+	return render_template('post.html', posts=[post])
 
 

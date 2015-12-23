@@ -5,30 +5,31 @@
 {% block title %}Flasky{% endblock %}
 
 {% block page_content %}
-<div class="container">
-	<h1>Hello,
-	{% if current_user.is_authenticated %} {{ current_user.username }}
-	{% else %} Stranger
-	{% endif %} !</h1> 
-	<div>
-		{% if current_user.can(Permission.WRITE_ARTICLES) %}
-		{{ wtf.quick_form(form) }}
-		{% endif %}
-	</div>
+<div class="page-header">
+    <h1>Hello, {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Stranger{% endif %}!</h1>
+</div>
+<div>
+    {% if current_user.can(Permission.WRITE_ARTICLES) %}
+    {{ wtf.quick_form(form) }}
+    {% endif %}
+</div>
+
 {% include '_posts.html' %}
 <div class="pagination">
 	{{ macros.pagination_widget(pagination, '.index') }}
 </div>
 
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{% endblock %}
 
 <div align="right"  valign="bottom">
 	<p> The local time is {{ moment(current_time).format('LLLL') }} </p>
 	<p> That was {{ moment(current_time).fromNow(refresh=True) }} </p>
 </div>
 
-</div>
 {% endblock %}
-
 
 {% block scripts %}
 {{ super() }}
