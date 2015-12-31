@@ -4,6 +4,11 @@ from wtforms.validators import Required, Length,Regexp, Email
 from ..models import Role,User,Post
 from flask.ext.pagedown.fields import PageDownField
 
+class CommentForm(Form):
+	body = StringField('', validators=[Required()])
+	submit = SubmitField('Submit')
+
+
 class PostForm(Form):
 	body = PageDownField("what's your mian ?", validators=[Required()])
 	submit = SubmitField('submit')
